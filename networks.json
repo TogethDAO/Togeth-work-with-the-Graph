@@ -1,7 +1,7 @@
 {
-  "mainnet": {
-    "Gravity": {
-      "address": "0x2E645469f354BB4F5c8a05B3b30A929361cf77eC"
+  "goerli": {
+    "TogetherDAO": {
+      "address": "0xba7e9465D241CaAbe431A79b2F863f5B2ebAEBB3"
     }
   }
 }
