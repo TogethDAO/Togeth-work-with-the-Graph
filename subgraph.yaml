@@ -1,27 +1,44 @@
-specVersion: 0.0.2
-description: Gravatar for Ethereum
-repository: https://github.com/graphprotocol/example-subgraph
+specVersion: 0.0.4
 schema:
   file: ./schema.graphql
 dataSources:
-  - kind: ethereum/contract
-    name: TogetherDAO
+  - kind: ethereum
+    name: Together
     network: goerli
     source:
-      address: '0xba7e9465D241CaAbe431A79b2F863f5B2ebAEBB3'
-      abi: TogetherDAO
+      address: "0xba7e9465D241CaAbe431A79b2F863f5B2ebAEBB3"
+      abi: Together
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - Gravatar
+        - Bought
+        - Cancle
+        - Claimed
+        - Contributed
+        - CreateProposal
+        - Expired
+        - Log
+        - Sell
       abis:
-        - name: TogetherDAO
+        - name: Together
           file: ./abis/TogetherDAO.json
       eventHandlers:
-        - event: NewGravatar(uint256,address,string,string)
-          handler: handleNewGravatar
-        - event: UpdatedGravatar(uint256,address,string,string)
-          handler: handleUpdatedGravatar
+        - event: Bought(address,uint256,address,address,uint256)
+          handler: handleBought
+        - event: Cancle(address,address,uint256,address)
+          handler: handleCancle
+        - event: Claimed(address,indexed address,address,uint256)
+          handler: handleClaimed
+        - event: Contributed(uint256,address,address,uint256)
+          handler: handleContributed
+        - event: CreateProposal(uint256,address,address,address,uint256,uint256,uint256,uint256)
+          handler: handleCreateProposal
+        - event: Expired(address)
+          handler: handleExpired
+        - event: Log(uint256,uint256)
+          handler: handleLog
+        - event: Sell(address,uint256,address,address,uint256)
+          handler: handleSell
       file: ./src/mapping.ts
