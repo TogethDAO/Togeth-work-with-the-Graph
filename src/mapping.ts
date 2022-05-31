@@ -13,61 +13,86 @@ import {
 import { ExampleEntity } from "../generated/schema"
 
 export function handleBought(event: Bought): void {
-  // Entities can be loaded from the store using a string ID; this ID
-  // needs to be unique across all entities of the same type
+
   let entity = ExampleEntity.load(event.transaction.from.toHex())
-
-  // Entities only exist after they have been saved to the store;
-  // `null` checks allow to create entities on demand
   if (!entity) {
-    entity = new ExampleEntity(event.transaction.from.toHex())
-
-    // Entity fields can be set using simple assignments
-    entity.count = BigInt.fromI32(0)
+    entity = new ExampleEntity(event.transaction.from.toHex())    
   }
+  entity.sender = event.params.sender
+  entity.index = event.params.index
+  entity.asset = event.params.asset
+  entity.token = event.params.token
+  entity.amount = event.params.amount
+  entity.save()
 
-  // BigInt and BigDecimal math are supported
+
+}
+
+export function handleCancle(event: Cancle): void {
+	
+  let id = event.params.index.toHexString()
+  
+  let entity = ExampleEntity.load(id)
   entity.count = entity.count + BigInt.fromI32(1)
-
-  // Entity fields can be set based on event parameters
   entity.sender = event.params.sender
   entity.index = event.params.index
 
-  // Entities can be written to the store with `.save()`
   entity.save()
-
-  // Note: If a handler doesn't require existing field values, it is faster
-  // _not_ to load the entity from the store. Instead, create it fresh with
-  // `new Entity(...)`, set the fields that should be updated and save the
-  // entity back to the store. Fields that were not set or unset remain
-  // unchanged, allowing for partial updates to be applied.
-
-  // It is also possible to access smart contracts from mappings. For
-  // example, the contract that has emitted the event can be connected to
-  // with:
-  //
-  // let contract = Contract.bind(event.address)
-  //
-  // The following functions can then be called on this contract to access
-  // state variables and other data:
-  //
-  // - contract.currentIndex(...)
-  // - contract.investorList(...)
-  // - contract.owner(...)
-  // - contract.proportionList(...)
-  // - contract.proposalList(...)
 }
 
-export function handleCancle(event: Cancle): void {}
+export function handleClaimed(event: Claimed): void {
+  let id = event.params.proposal.toHexString()
+  
+  let entity = ExampleEntity.load(id)
+  entity.contributor = event.params.contributor
+  entity.token = event.params.token
+  entity.tokenAmount = event.params.tokenAmount
 
-export function handleClaimed(event: Claimed): void {}
+  entity.save()
+}
 
-export function handleContributed(event: Contributed): void {}
+export function handleContributed(event: Contributed): void {
+  let id = event.params.proposal.toHexString()  
+  let entity = ExampleEntity.load(id)
+  entity.contributor = event.params.contributor
+  entity.token = event.params.token
+  entity.tokenAmount = event.params.tokenAmount
 
-export function handleCreateProposal(event: CreateProposal): void {}
+  entity.save()
+}
 
-export function handleExpired(event: Expired): void {}
+export function handleCreateProposal(event: CreateProposal): void {
+  let entity =new ExampleEntity(event.params.index.toHex())
+
+  entity.creator = event.params.creator
+  entity.asset = event.params.asset
+  entity.token = event.params.token
+  entity.tokenAmount = event.params.tokenAmount
+  entity.amount = event.params.amount
+  entity.secondsToTimeoutFoundraising = event.params.secondsToTimeoutFoundraising
+  entity.secondsToTimeoutBuy = event.params.secondsToTimeoutBuy
+  entity.secondsToTimeoutSell = event.params.secondsToTimeoutSell
+  entity.save()
+}
+
+export function handleExpired(event: Expired): void {
+  let id = event.params.param0.toHexString()  
+  let entity = ExampleEntity.load(id)
+  entity.param1 = event.params.param1
+  entity.save()
+}
 
 export function handleLog(event: Log): void {}
 
-export function handleSell(event: Sell): void {}
+export function handleSell(event: Sell): void {
+  let entity = ExampleEntity.load(event.params.index.toHex())
+  if (!entity) {
+    entity = new ExampleEntity(event.params.index.toHex())    
+  }
+  entity.sender = event.params.sender
+  entity.index = event.params.index
+  entity.asset = event.params.asset
+  entity.token = event.params.token
+  entity.amount = event.params.amount
+  entity.save()
+}

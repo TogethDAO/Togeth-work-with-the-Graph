@@ -1,6 +1,41 @@
-type ExampleEntity @entity {
+type Contributed @entity {
   id: ID!
-  count: BigInt!
-  sender: Bytes! # address
-  index: BigInt! # uint256
+  proposal_index: BigInt! #uint256
+  contributor: Bytes! # address
+  token: Bytes!  #address
+  amount: BigInt! # uint256
 }
+
+type Bought @entity {
+  id: ID!
+  buyer: Bytes!
+  proposal_index: BigInt!
+  nftContract: Bytes!
+  token: Bytes! 
+  token_amount: BigInt!
+}
+type Cancle @entity {
+  id: ID!
+  sender: Bytes!
+  nftContract: Bytes! 
+  tokenid: BigInt! 
+  proposal: BigInt! 
+}
+
+type Claimed @entity {
+  id: ID!
+  proposal: BigInt!
+  contributor: Bytes! 
+  token: Bytes! 
+  tokenAmount: BigInt!
+}
+
+type Sell @entity {
+  id: ID!  
+  sender: Bytes!
+  index: BigInt!
+  nftContract: Bytes!
+  
+}
+
+
