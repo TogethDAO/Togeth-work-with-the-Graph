@@ -1,3 +1,6 @@
-# Example Subgraph
+# *TogethDAO*
+[Demo Video](https://youtu.be/TlvsHnNld5k)
 
-An example to help you get started with The Graph. For more information see the docs on https://thegraph.com/docs/.
+[Demo Site](http://203.195.224.157:3000/)
+
+TogethDAO leverages the Graph Protocol to fetch on-chain data to show the dynamic of the proposals to DAO members in real time.
