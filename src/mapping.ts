@@ -1,4 +1,4 @@
-import { BigInt } from "@graphprotocol/graph-ts"
+import { BigInt,Address } from "@graphprotocol/graph-ts"
 import {
   Together,
   Bought,
@@ -10,19 +10,19 @@ import {
   Log,
   Sell
 } from "../generated/Together/Together"
-import { ExampleEntity } from "../generated/schema"
+import { OnContributed,OnBought,OnCancle,OnClaimed,OnSell, OnCreateProposal } from "../generated/schema"
 
 export function handleBought(event: Bought): void {
 
-  let entity = ExampleEntity.load(event.transaction.from.toHex())
-  if (!entity) {
-    entity = new ExampleEntity(event.transaction.from.toHex())    
+  let entity = OnBought.load(event.params.index.toHexString())
+  if(entity == null){
+    entity = new OnBought(event.transaction.index.toHex())
   }
-  entity.sender = event.params.sender
-  entity.index = event.params.index
-  entity.asset = event.params.asset
+  entity.buyer = event.params.sender
+  entity.proposal_index = event.params.index
+  entity.nftContract = event.params.asset
   entity.token = event.params.token
-  entity.amount = event.params.amount
+  entity.token_amount = event.params.amount
   entity.save()
 
 
@@ -30,69 +30,77 @@ export function handleBought(event: Bought): void {
 
 export function handleCancle(event: Cancle): void {
 	
-  let id = event.params.index.toHexString()
+  let id = event.params.triggeredBy.toHexString()
   
-  let entity = ExampleEntity.load(id)
-  entity.count = entity.count + BigInt.fromI32(1)
-  entity.sender = event.params.sender
-  entity.index = event.params.index
+  let entity = OnCancle.load(id)
 
+  if(entity == null){
+    entity = new OnCancle(event.transaction.index.toHex())
+  }
+
+  entity.sender = event.params.triggeredBy
+  entity.tokenid = event.params.tokenid
+  entity.nftContract = event.params.targetAddress
+  entity.proposal = event.params.propsal
   entity.save()
 }
 
 export function handleClaimed(event: Claimed): void {
   let id = event.params.proposal.toHexString()
   
-  let entity = ExampleEntity.load(id)
+  let entity = OnClaimed.load(id)
+
+  if(entity == null){
+    entity = new OnClaimed(event.transaction.index.toHex())
+  }
   entity.contributor = event.params.contributor
   entity.token = event.params.token
   entity.tokenAmount = event.params.tokenAmount
-
+  entity.proposal = event.params.proposal
   entity.save()
 }
 
 export function handleContributed(event: Contributed): void {
   let id = event.params.proposal.toHexString()  
-  let entity = ExampleEntity.load(id)
+  let entity = OnContributed.load(id)
+  if(entity == null){
+    entity = new OnContributed(event.transaction.index.toHex() )
+  }
   entity.contributor = event.params.contributor
   entity.token = event.params.token
-  entity.tokenAmount = event.params.tokenAmount
+  entity.amount = event.params.amount
 
   entity.save()
 }
 
 export function handleCreateProposal(event: CreateProposal): void {
-  let entity =new ExampleEntity(event.params.index.toHex())
+  let entity =OnCreateProposal.load(event.params.index.toHexString())
+
+  if(entity == null){
+    entity = new OnCreateProposal(event.transaction.index.toHex())
+  }
 
   entity.creator = event.params.creator
   entity.asset = event.params.asset
   entity.token = event.params.token
   entity.tokenAmount = event.params.tokenAmount
-  entity.amount = event.params.amount
+ 
   entity.secondsToTimeoutFoundraising = event.params.secondsToTimeoutFoundraising
   entity.secondsToTimeoutBuy = event.params.secondsToTimeoutBuy
   entity.secondsToTimeoutSell = event.params.secondsToTimeoutSell
   entity.save()
 }
 
-export function handleExpired(event: Expired): void {
-  let id = event.params.param0.toHexString()  
-  let entity = ExampleEntity.load(id)
-  entity.param1 = event.params.param1
-  entity.save()
-}
-
-export function handleLog(event: Log): void {}
 
 export function handleSell(event: Sell): void {
-  let entity = ExampleEntity.load(event.params.index.toHex())
-  if (!entity) {
-    entity = new ExampleEntity(event.params.index.toHex())    
+  let entity = OnSell.load(event.params.index.toHex())
+  if(entity == null){
+    entity = new OnSell(event.transaction.index.toHex())
   }
   entity.sender = event.params.sender
   entity.index = event.params.index
-  entity.asset = event.params.asset
-  entity.token = event.params.token
-  entity.amount = event.params.amount
+  entity.nftContract = event.params.asset
+
+
   entity.save()
 }

@@ -1,4 +1,4 @@
-type Contributed @entity {
+type OnContributed @entity {
   id: ID!
   proposal_index: BigInt! #uint256
   contributor: Bytes! # address
@@ -6,7 +6,7 @@ type Contributed @entity {
   amount: BigInt! # uint256
 }
 
-type Bought @entity {
+type OnBought @entity {
   id: ID!
   buyer: Bytes!
   proposal_index: BigInt!
@@ -14,27 +14,40 @@ type Bought @entity {
   token: Bytes! 
   token_amount: BigInt!
 }
-type Cancle @entity {
+type OnCancle @entity {
   id: ID!
   sender: Bytes!
   nftContract: Bytes! 
   tokenid: BigInt! 
-  proposal: BigInt! 
+  proposal: Bytes! 
 }
 
-type Claimed @entity {
+type OnClaimed @entity {
   id: ID!
-  proposal: BigInt!
+  proposal: Bytes!
   contributor: Bytes! 
   token: Bytes! 
   tokenAmount: BigInt!
 }
 
-type Sell @entity {
+type OnSell @entity {
   id: ID!  
   sender: Bytes!
   index: BigInt!
   nftContract: Bytes!
+  
+}
+type OnCreateProposal @entity {
+  id: ID!   
+  index: BigInt!
+  creator: Bytes!
+  asset: Bytes!
+  token: Bytes!
+  tokenAmount: BigInt!
+  secondsToTimeoutFoundraising: BigInt!
+  secondsToTimeoutBuy: BigInt!
+  secondsToTimeoutSell: BigInt!
+ 
   
 }
 
